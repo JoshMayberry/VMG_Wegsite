@@ -1,0 +1,13 @@
+<script>
+	// Populate Filters
+	$(".filter-dynamic").each((index, element) => {
+		const values = {};
+		const $element = $(element);
+		$element.next().find(".w-dyn-item").each((index_child, element_child) => {
+			const $element_child = $(element_child);
+			values[$element_child.text()] = true;
+			$element_child.remove();
+		});
+		$element.append(Object.keys(values).sort().map((key) => $(document.createElement("option")).text(key)));
+	})
+</script>

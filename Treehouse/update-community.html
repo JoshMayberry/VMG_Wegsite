@@ -1,0 +1,429 @@
+<script type="text/javascript">
+	// $(() => {
+
+		// fetch(`https://api.webflow.com/info`, {
+		// 	method: "GET",
+		// 	headers: {
+		// 		Accept: "application/json",
+		// 		Authorization: "Bearer d3190cc34d1b8bbfbf5c8e79ea95f5b4710e03663dd1d8fe703a470efedce307",
+		// 		"accept-version": "1.0.0",
+		// 		"Content-Type": "application/json",
+		// 	},
+		// })
+		// .then((res) => {
+		// 	console.log("@done.1", {res})
+
+		// 	res.json()
+		// 		.catch(err => console.log("@error.1", {err}))
+		// 		.then((body) => {
+		// 			console.log("@answer.1", {body});
+		// 		});
+		// })
+		
+
+
+
+
+		// $.ajax({
+		//  // See: https://developers.webflow.com/#list-collections
+		//  url: "https://api.webflow.com/sites/623107ba68bd7b6644a033c0/collections?access_token=9f132212c4f020f2cb98dd05c1d3bb2a2470a8744b81aaecb741bb83c3fce0b6",
+		//  method: "get",
+		//  crossDomain: true,
+		//  dataType: "jsonp",
+		
+		//  // See: https://developers.webflow.com/#authentication
+		//  "headers": {
+		//    "Accept": "application/json",
+		//    "Content-Type": "application/json",
+		//    "Authorization": "Bearer 9f132212c4f020f2cb98dd05c1d3bb2a2470a8744b81aaecb741bb83c3fce0b6",
+		//    "accept-version": "1.0.0",
+		//  },
+		// })
+		// .done((data, textStatus, jqXHR) => {
+		//  console.log("@done.1", {data, textStatus, jqXHR});
+		// })
+		// .fail((jqXHR, textStatus, errorThrown) => {
+		//  console.error("@fail.1", {jqXHR, textStatus, errorThrown});
+		// });
+	// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const isObjectEmpty = obj => Object.keys(obj).length === 0;
+const pick = (obj, ...props) => {
+  const picked = {};
+
+  props.forEach((prop) => {
+    if (obj[prop] !== undefined) {
+      picked[prop] = obj[prop];
+    }
+  });
+
+  return picked;
+};
+
+
+
+class ResponseWrapper {
+  constructor(api) {
+    this.api = api;
+  }
+
+  site(site) {
+    return {
+      ...site,
+
+      collections: this.api.collections.bind(this.api, { siteId: site._id }),
+      webhooks: this.api.webhooks.bind(this.api, { siteId: site._id }),
+      domains: this.api.domains.bind(this.api, { siteId: site._id }),
+      webhook(first, ...rest) {
+        return this.api.webhook({ ...first, siteId: site._id }, ...rest);
+      },
+      createWebhook(first, ...rest) {
+        return this.api.createWebhook({ ...first, siteId: site._id }, ...rest);
+      },
+      removeWebhook(first, ...rest) {
+        return this.api.removeWebhook({ ...first, siteId: site._id }, ...rest);
+      },
+      publishSite(domains) {
+        return this.api.publishSite({ siteId: site._id, domains });
+      },
+    };
+  }
+
+  domain(domain) {
+    return {
+      ...domain,
+    };
+  }
+
+  collection(collection) {
+    return {
+      ...collection,
+
+      items: this.api.items.bind(this.api, { collectionId: collection._id }),
+      item(first, ...rest) {
+        return this.api.item({ ...first, collectionId: collection._id }, ...rest);
+      },
+      createItem(first, ...rest) {
+        return this.api.createItem({ ...first, collectionId: collection._id }, ...rest);
+      },
+      updateItem(first, ...rest) {
+        return this.api.updateItem({ ...first, collectionId: collection._id }, ...rest);
+      },
+      removeItem(first, ...rest) {
+        return this.api.removeItem({ ...first, collectionId: collection._id }, ...rest);
+      },
+    };
+  }
+
+  item(item, collectionId) {
+    return {
+      ...item,
+
+      update(first, ...rest) {
+        return this.api.updateItem({ ...first, collectionId, itemId: item._id }, ...rest);
+      },
+      remove: this.api.updateItem.bind(this.api, { collectionId, itemId: item._id }),
+    };
+  }
+
+  webhook(webhook, siteId) {
+    return {
+      ...webhook,
+
+      remove: this.api.removeWebhook.bind(this.api, { siteId, webhookId: webhook._id }),
+    };
+  }
+}
+
+
+
+
+
+
+
+const DEFAULT_ENDPOINT = 'https://api.webflow.com';
+
+const buildMeta = (res) => {
+  if (!res || !res.headers) { return {}; }
+
+  return {
+    rateLimit: {
+      limit: parseInt(res.headers.get('x-ratelimit-limit'), 10),
+      remaining: parseInt(res.headers.get('x-ratelimit-remaining'), 10),
+    },
+  };
+};
+
+const responseHandler = res =>
+  res.json()
+    .catch(err => console.error(err))
+    .then((body) => {
+      if (res.status >= 400) {
+        const errOpts = {
+          code: body.code,
+          msg: body.msg,
+          _meta: buildMeta(res),
+        };
+
+        if (body.problems && body.problems.length > 0) {
+          errOpts.problems = body.problems;
+        }
+
+        const errMsg = (body && body.err) ? body.err : 'Unknown error occured';
+        const err = new WebflowError(errMsg);
+
+        return Promise.reject(Object.assign(err, errOpts));
+      }
+
+      body._meta = buildMeta(res); // eslint-disable-line no-param-reassign
+
+      return body;
+    });
+
+class Webflow {
+  constructor({
+    endpoint = DEFAULT_ENDPOINT,
+    token,
+    version = '1.0.0',
+  } = {}) {
+    if (!token) throw buildRequiredArgError('token');
+
+    this.responseWrapper = new ResponseWrapper(this);
+
+    this.endpoint = endpoint;
+    this.token = token;
+
+    this.headers = {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+      'accept-version': version,
+      'Content-Type': 'application/json',
+    };
+
+    this.authenticatedFetch = (method, path, data, query) => {
+      const queryString = query && !isObjectEmpty(query)
+        ? `?${qs.stringify(query)}`
+        : '';
+
+      const uri = `${this.endpoint}${path}${queryString}`;
+      const opts = {
+        method,
+        headers: this.headers,
+        mode: 'cors',
+      };
+
+      if (data) {
+        opts.body = JSON.stringify(data);
+      }
+
+      return fetch(uri, opts)
+        .then(responseHandler);
+    };
+  }
+
+  // Generic HTTP request handlers
+
+  get(path, query = {}) {
+    return this.authenticatedFetch('GET', path, false, query);
+  }
+
+  post(path, data, query = {}) {
+    return this.authenticatedFetch('POST', path, data, query);
+  }
+
+  put(path, data, query = {}) {
+    return this.authenticatedFetch('PUT', path, data, query);
+  }
+
+  patch(path, data, query = {}) {
+    return this.authenticatedFetch('PATCH', path, data, query);
+  }
+
+  delete(path, query = {}) {
+    return this.authenticatedFetch('DELETE', path, query);
+  }
+
+  // Meta
+
+  info(query = {}) {
+    return this.get('/info', query);
+  }
+
+  // Sites
+
+  sites(query = {}) {
+    return this.get('/sites', query).then(sites => sites.map(site => this.responseWrapper.site(site)));
+  }
+
+  site({ siteId }, query = {}) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+
+    return this.get(`/sites/${siteId}`, query).then(site => this.responseWrapper.site(site));
+  }
+
+  publishSite({ siteId, domains }) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+    if (!domains) return Promise.reject(buildRequiredArgError('domains'));
+
+    return this.post(`/sites/${siteId}/publish`, { domains });
+  }
+
+  // Domains
+
+  domains({ siteId }) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+
+    return this.get(`/sites/${siteId}/domains`).then(
+      domains => domains.map(domain => this.responseWrapper.domain(domain, siteId)),
+    );
+  }
+
+  // Collections
+
+  collections({ siteId }, query = {}) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+
+    return this.get(`/sites/${siteId}/collections`, query).then(
+      collections => collections.map(collection => this.responseWrapper.collection(collection)),
+    );
+  }
+
+  collection({ collectionId }, query = {}) {
+    if (!collectionId) return Promise.reject(buildRequiredArgError('collectionId'));
+
+    return this.get(`/collections/${collectionId}`, query).then(
+      collection => this.responseWrapper.collection(collection),
+    );
+  }
+
+  // Items
+
+  items({ collectionId }, query = {}) {
+    if (!collectionId) return Promise.reject(buildRequiredArgError('collectionId'));
+
+    return this.get(`/collections/${collectionId}/items`, query).then(
+      res => ({
+        ...res,
+
+        items: res.items.map(item => this.responseWrapper.item(item, collectionId)),
+      }),
+    );
+  }
+
+  item({ collectionId, itemId }, query = {}) {
+    if (!collectionId) return Promise.reject(buildRequiredArgError('collectionId'));
+    if (!itemId) return Promise.reject(buildRequiredArgError('siteId'));
+
+    return this.get(`/collections/${collectionId}/items/${itemId}`, query).then(
+      res => this.responseWrapper.item(res.items[0], collectionId),
+    );
+  }
+
+  createItem({ collectionId, ...data }, query = {}) {
+    if (!collectionId) return Promise.reject(buildRequiredArgError('collectionId'));
+
+    return this.post(`/collections/${collectionId}/items`, data, query).then(
+      item => this.responseWrapper.item(item, collectionId),
+    );
+  }
+
+  updateItem({ collectionId, itemId, ...data }, query = {}) {
+    if (!collectionId) return Promise.reject(buildRequiredArgError('collectionId'));
+    if (!itemId) return Promise.reject(buildRequiredArgError('itemId'));
+
+    return this.put(`/collections/${collectionId}/items/${itemId}`, data, query);
+  }
+
+  removeItem({ collectionId, itemId }, query = {}) {
+    if (!collectionId) return Promise.reject(buildRequiredArgError('collectionId'));
+    if (!itemId) return Promise.reject(buildRequiredArgError('itemId'));
+
+    return this.delete(`/collections/${collectionId}/items/${itemId}`, query);
+  }
+
+  patchItem({ collectionId, itemId, ...data }, query = {}) {
+    if (!collectionId) return Promise.reject(buildRequiredArgError('collectionId'));
+    if (!itemId) return Promise.reject(buildRequiredArgError('itemId'));
+
+    return this.patch(`/collections/${collectionId}/items/${itemId}`, data, query);
+  }
+
+  // Images
+
+  // TODO
+
+  // Webhooks
+
+  webhooks({ siteId }, query = {}) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+
+    return this.get(`/sites/${siteId}/webhooks`, query).then(
+      webhooks => webhooks.map(webhook => this.responseWrapper.webhook(webhook, siteId)),
+    );
+  }
+
+  webhook({ siteId, webhookId }, query = {}) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+    if (!webhookId) return Promise.reject(buildRequiredArgError('webhookId'));
+
+    return this.get(`/sites/${siteId}/webhooks/${webhookId}`, query).then(
+      webhook => this.responseWrapper.webhook(webhook, siteId),
+    );
+  }
+
+  createWebhook({ siteId, ...data }, query = {}) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+
+    return this.post(`/sites/${siteId}/webhooks`, data, query).then(
+      webhook => this.responseWrapper.webhook(webhook, siteId),
+    );
+  }
+
+  removeWebhook({ siteId, webhookId }, query = {}) {
+    if (!siteId) return Promise.reject(buildRequiredArgError('siteId'));
+    if (!webhookId) return Promise.reject(buildRequiredArgError('webhookId'));
+
+    return this.delete(`/sites/${siteId}/webhooks/${webhookId}`, query);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const webflow = new Webflow({ token: 'd3190cc34d1b8bbfbf5c8e79ea95f5b4710e03663dd1d8fe703a470efedce307' })
+
+webflow.info()
+  .then(info => console.log(info))
+
+
+
+</script>
