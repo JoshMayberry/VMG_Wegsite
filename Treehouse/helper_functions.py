@@ -8,6 +8,7 @@ import time
 import logging
 import datetime
 import requests
+import traceback
 import itertools
 import collections
 import configparser
@@ -26,7 +27,6 @@ import storage_util
 	# pandas
 	# dropbox
 	# psycopg2
-	# Webflowpy
 	# azure-storage-blob
 
 debugging = False
@@ -87,8 +87,10 @@ def logger_timer(label=None):
 
 			catalogue = logger_timers[label]
 
+			logging.info(f"Starting the '{label}' timer")
 			catalogue["start"] = time.perf_counter()
 			answer = myFunction(*args, **kwargs)
+			logging.info(f"Ending the '{label}' timer")
 			catalogue["end"] = time.perf_counter()
 			return answer
 		return wrapper
@@ -122,26 +124,36 @@ def tryExcept(myFunction):
 		try:
 			return myFunction(*args, **kwargs)
 		except Exception as error:
-			print(error)
+			traceback.print_exception(type(error), error, error.__traceback__)
 	return wrapper
 
-def config(filename="database.ini", section="postgresql", **kwargs):
-	""" Reads in the database.ini file and returns the connection parameters as a dictionary.
-	Use: http://www.postgresqltutorial.com/postgresql-python/connect/
+parser = None
+def config(key=None, section="postgresql", *, filename="database.ini", useCached=True, defaultValue=None, **kwargs):
+	""" Reads value(s) from the config file.
 
-	filename (str) - Where the ini file is located
 	section (str) - Which ini section to read from
+	key (str) - Which key to return from the ini file
+		- If None: Returns a dictionary of all items in *section*
+	filename (str) - Where the ini file is located
+	useCached (bool) - If the config file loaded last time should be reused
+	defaultValue (any) - What shoudl be used if *key* is not in *section*
 
 	Example Input: config()
-	Example Input: config("lorem.ini")
 	Example Input: config(section="ipsum")
+	Example Input: config(filename="lorem.ini")
+	Example Input: config(key="token", section="dropbox")
 	"""
+	global parser
 
-	parser = configparser.ConfigParser()
-	parser.read(filename)
+	if (not useCached or not parser):
+		parser = configparser.ConfigParser()
+		parser.read(filename)
  
 	if not parser.has_section(section):
 		raise ValueError(f"Section '{section}' not found in the '{filename}' file")
+
+	if (key):
+		return parser[section].get(key, defaultValue)
 
 	return {key: value for (key, value) in parser.items(section)}
 
@@ -233,7 +245,7 @@ def ma_getData(url, *, token=None, alias=None, modifyData=None, filterData=None,
 
 	return data
 
-def fs_getData(form, *, view=None, server="fs8", user="e1SwO6", bearer="Bearer 4EBZMpQtMxB2eD5l4se6jH7QHx52V12q", cookie="AWSALB=JhqCn6DQPrZqvO4fk8jOMyB8fucxFlrSohvhblAANzGrN9cR3vUU89YLyXtVwFT/ka+jumGxcejmeI/gGMqX6zo/2fQRKTPUXRTzpr8rhOptlInl0bsVu2Gc3HP8; AWSALBCORS=JhqCn6DQPrZqvO4fk8jOMyB8fucxFlrSohvhblAANzGrN9cR3vUU89YLyXtVwFT/ka+jumGxcejmeI/gGMqX6zo/2fQRKTPUXRTzpr8rhOptlInl0bsVu2Gc3HP8"):
+def fs_getData(form, *, view=None, server=None, user=None, bearer=None, cookie=None):
 	""" Returns data from Formsite.
 
 	form (str or tuple) - The form code of the form to return data for 
@@ -248,6 +260,11 @@ def fs_getData(form, *, view=None, server="fs8", user="e1SwO6", bearer="Bearer 4
 	Example Input: fs_getData("wjsrave6n6")
 	Example Input: fs_getData("rf1gmwaueh", view=101)
 	"""
+
+	user = user or config("user", "formsite")
+	server = server or config("server", "formsite")
+	bearer = bearer or config("bearer", "formsite")
+	cookie = cookie or config("cookie", "formsite")
 
 	data = []
 
@@ -335,6 +352,7 @@ def _posgres_renameKeys(iterable):
 def posgres_insert(data, table, *, method="upsert", insert_method="single", backup=None, lowerNames=True, typeCatalogue=None, **kwargs):
 	""" Adds data to a posgres database.
 	See: https://www.psycopg.org/docs/usage.html#query-parameters
+	Use: http://www.postgresqltutorial.com/postgresql-python/connect/
 
 	data (tuple of dict) - What to send to the database
 	table (str) - Which table to send the data to
@@ -480,7 +498,7 @@ def posgres_insert(data, table, *, method="upsert", insert_method="single", back
 
 	return True
 
-def posgres_raw(query_sql, query_args=None, *, as_dict=True, **kwargs):
+def posgres_raw(query_sql, query_args=None, *, as_dict=True, alias=None, filterData=None, modifyData=None, **kwargs):
 	""" Returns the answer to a raw sql statement to ther database.
 
 	table (str) - Which table to get data from
@@ -493,19 +511,34 @@ def posgres_raw(query_sql, query_args=None, *, as_dict=True, **kwargs):
 	# See: https://www.psycopg.org/docs/connection.html
 	logging.info("Making posgres connection...")
 	connection = psycopg2.connect(**config(**kwargs))
+	data = []
 	with connection:
 		cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) if as_dict else connection.cursor()
 		with cursor:
 			logging.info("Sending raw query...")
 			cursor.execute(query_sql, query_args or ())
-			answer = [dict(catalogue) for catalogue in cursor.fetchall()] if as_dict else cursor.fetchall()
-			logging.info(f"Recieved '{len(answer or ())}' results")
+			data = [dict(catalogue) for catalogue in cursor.fetchall()] if as_dict else cursor.fetchall()
+			logging.info(f"Recieved '{len(data or ())}' results")
 	logging.info("Closing posgres connection...")
 	connection.close()
 
-	return answer
+	if (alias):
+		logging.info("Applying alias to data...")
+		data = tuple({alias.get(key, key): value for (key, value) in catalogue.items()} for catalogue in data)
 
-def _blobStorage_getConnection(container, *, account_name="rpbireporting", account_key="bAOuK2OF8AEepv1fjDR+cnBS675dbkikS9jyj0Wz1PV9ST/urHDOp3MrRsZMsR/j2tjXfEQeb7MdwevrYbxKdw==", **kwargs):
+	if (filterData):
+		logging.info("Filtering data...")
+		for myFunction in common.ensure_container(filterData):
+			data = data.filter(myFunction)
+
+	if (modifyData):
+		logging.info("Modifying data...")
+		for myFunction in common.ensure_container(modifyData):
+			data = myFunction(data)
+
+	return data
+
+def _blobStorage_getConnection(container, *, account_name="rpbireporting", account_key=None, **kwargs):
 	""" Returns a blob storage connection.
 
 	account_name (str) - The name of the account to connect to
@@ -514,6 +547,8 @@ def _blobStorage_getConnection(container, *, account_name="rpbireporting", accou
 	Example Input: _blobStorage_getConnection("treehouse")
 	Example Input: _blobStorage_getConnection("ma-extract", account_name="birdeye01reporting", account_key="/bVON7ccB6Dt9K46adTgtxppuF2gLosUoNwuWOgKerNyLKOxhyH2Gahogotp4PrP11avJDd4axlHCvdHTb132A==")
 	"""
+
+	account_key = account_key or config("account_key", "blob")
 
 	logging.info(f"Making blob storage connection to '{container}'...")
 	connection_string = ";".join([
@@ -759,7 +794,7 @@ def blobStorage_select(container="postgres", folder=None, filename=None, *,
 		case _:
 			raise KeyError(f"Unknown *input_type* '{input_type}'")
 
-def dropbox_insert(data, container="systems_data/report_data_source", folder=None, filename=None, *, method="upsert", token="jVPlY1ZQdYAAAAAAAAADjMh1aeLjQKPW7Sv57fsyzwxkcnxFcnXUeFIF9Hez35Mz", **kwargs):
+def dropbox_insert(data, container="systems_data/report_data_source", folder=None, filename=None, *, method="upsert", token=None, **kwargs):
 	""" Sends data to dropbox.
 
 	data (any) - What to send to the dropbox
@@ -783,6 +818,7 @@ def dropbox_insert(data, container="systems_data/report_data_source", folder=Non
 	"""
 
 	filename = filename or "unknown.txt"
+	token = token or config("token", "dropbox")
 	dropboxHandle = dropbox.Dropbox(token)
 
 	# See: https://dropbox-sdk-python.readthedocs.io/en/latest/api/dropbox.html#dropbox.dropbox_client.Dropbox.files_list_folder
@@ -807,6 +843,87 @@ def dropbox_insert(data, container="systems_data/report_data_source", folder=Non
 
 	return True
 
+def webflow_select(collection_id, limit=-1, *, offset=0, token=None, **kwargs):
+	""" Returns the data from a webflow collection.
+	See: https://www.briantsdawson.com/blog/webflow-api-how-to-get-site-collection-and-item-ids-for-zapier-and-parabola-use
+
+	collection_id (str) - Which collection to connect to
+	limit (int) - How much data to return. If less than 1 will return everything
+	offset (int) - Use in combination with limit being not less than 1
+
+	Example Input: webflow_select(collection_id="623107ba68bd7ba11ca033c7")
+	Example Input: webflow_select(collection_id="623107ba68bd7ba11ca033c7", limit=1)
+	Example Input: webflow_select(collection_id="623107ba68bd7ba11ca033c7", limit=100, offset=100)
+	"""
+
+	token = token or config("token", "webflow")
+
+	webflow_api = Webflow(token=token)
+	return webflow_api.collection(collection_id=collection_id, limit=limit, all=limit <= 0)["items"]
+
+def webflow_insert(data, collection_id="623107ba68bd7ba11ca033c7", *, method="upsert", upsert_on="_id", live=False, token=None, site_id="623107ba68bd7b6644a033c0", **kwargs):
+	""" Sends data to a webflow collection.
+	See: https://www.briantsdawson.com/blog/webflow-api-how-to-get-site-collection-and-item-ids-for-zapier-and-parabola-use
+
+	method (str) - How to handle sending the data
+		- insert: Try adding it and throw an error if it already exists
+		- drop: Drop all collection items in the folder and insert new collection items
+	upsert_on (str) - What key to compare updates against
+	live (bool) - If the change should be applied to the production server instead of the development server
+
+	Example Input: webflow_insert([{Lorem: "ipsum"}])
+	Example Input: webflow_insert([{Lorem: "ipsum"}], collection_id="623107ba68bd7ba11ca033c7")
+	"""
+
+	if (isinstance(data, pandas.DataFrame)):
+		# See: https://pandas.pydata.org/pandas-docs/version/0.17.0/generated/pandas.DataFrame.to_dict.html#pandas.DataFrame.to_dict
+		data = data.replace({numpy.nan: None}).to_dict("records")
+
+	if (not len(data)):
+		logging.info(f"No data to insert into '{table}'")
+		return False
+
+	token = token or config("token", "webflow")
+	webflow_api = Webflow(token=token)
+
+	match method:
+		case "drop":
+			for item in webflow_api.items(collection_id=collection_id)["items"]:
+				webflow_api.removeItem(collection_id=collection_id, item_id=item["_id"])
+
+			for item in data:
+				webflow_api.createItem(collection_id=collection_id, item_data=item, live=live)
+
+		case "insert":
+			for item in data:
+				webflow_api.createItem(collection_id=collection_id, item_data=item, live=live)
+
+		case "upsert":
+			catalogue = {}
+			catalogue = {item.get(upsert_on, None): item for item in webflow_api.items(collection_id=collection_id)["items"]}
+
+			for item in data:
+				item_existing = catalogue.get(item.get(upsert_on, None), None)
+				if (not item_existing):
+					if ("_draft" not in item):
+						item["_draft"] = False
+
+					if ("_archived" not in item):
+						item["_archived"] = False
+
+					webflow_api.createItem(collection_id=collection_id, item_data=item, live=live)
+					continue
+
+				# Check if any changes need to be made
+				for (key, value) in item.items():
+					if (item_existing.get(key, None) != value):
+						webflow_api.patchItem(collection_id=collection_id, item_id=item_existing["_id"], item_data=item, live=live)
+						break
+	
+		case _:
+			raise KeyError(f"Unknown *method* '{method}'")
+
+
 # Deprecated names
 renameKeys = _posgres_renameKeys
 get_manage_america_token = _ma_getToken
@@ -830,29 +947,3 @@ def get_json_response_ma(token, url, **kwargs):
 
 	logging.debug(debugging and f"ma_response: '{data}'")
 	return data
-
-def webflow_select(collection_id, limit=-1, *, offset=0, token="0951d02dbfafb852a8249f1f34db9da5166bb7378872b32b1d4fd8f103002c0f", site_id="623107ba68bd7b6644a033c0" ):
-	""" Returns the data from a webflow collection.
-	See: https://www.briantsdawson.com/blog/webflow-api-how-to-get-site-collection-and-item-ids-for-zapier-and-parabola-use
-
-	collection_id (str) - Which collection to connect to
-	limit (int) - How much data to return. If less than 1 will return everything
-	offset (int) - Use in combination with limit being not less than 1
-
-	Example Input: webflow_select(collection_id="623107ba68bd7ba11ca033c7")
-	Example Input: webflow_select(collection_id="623107ba68bd7ba11ca033c7", limit=1)
-	Example Input: webflow_select(collection_id="623107ba68bd7ba11ca033c7", limit=100, offset=100)
-	"""
-
-	webflow_api = Webflow(token=token)
-	return webflow_api.collection(collection_id=collection_id, limit=limit, all=limit <= 0)["items"]
-
-def webflow_insert(collection_id, *, token="0951d02dbfafb852a8249f1f34db9da5166bb7378872b32b1d4fd8f103002c0f", site_id="623107ba68bd7b6644a033c0" ):
-	""" Sends data to a webflow collection.
-	See: https://www.briantsdawson.com/blog/webflow-api-how-to-get-site-collection-and-item-ids-for-zapier-and-parabola-use
-
-	Example Input: webflow_insert(collection_id="623107ba68bd7ba11ca033c7")
-	"""
-
-	webflow_api = Webflow(token=token)
-	print("@1", webflow_api.items(collection_id=collection_id))

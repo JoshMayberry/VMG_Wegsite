@@ -1,0 +1,500 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pandas",
+				"pandas.DataFrame"
+			],
+			[
+				"out",
+				"output_count"
+			],
+			[
+				"blo",
+				"blobStorage_insert"
+			],
+			[
+				"drop",
+				"dropbox_insert"
+			],
+			[
+				"priva",
+				"NULL_private"
+			],
+			[
+				"han",
+				"handle_file"
+			],
+			[
+				"send",
+				"sendTo_dataFactory"
+			],
+			[
+				"vmg",
+				"vmg-panel-tab"
+			],
+			[
+				"tra",
+				"transparent"
+			],
+			[
+				"mdl",
+				"mdl-layout__header"
+			],
+			[
+				"cata",
+				"catalogue_data"
+			],
+			[
+				"Number",
+				"Number.ToText"
+			],
+			[
+				"Record",
+				"Record.FieldOrDefault"
+			],
+			[
+				"requ",
+				"required_column_any"
+			],
+			[
+				"cat",
+				"catalogue_type"
+			],
+			[
+				"spa",
+				"space-around"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 130.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert____2022-03-23-09-58.log",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/sql_scripts/property__create-table.sql",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgres-insert.bat",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/database.ini",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-11-13-39.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-11-13-43.log",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/test.bat",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-11-13-37.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-11-13-03.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-11-13-01.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/misc_files/vine-code-pbi.html",
+		"/C/Users/JoshuaMayberry/Documents/The Vine/vine-code__1.html",
+		"/C/Users/JoshuaMayberry/Documents/The Vine/vine-code__1.min.html",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-10-14-27.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-10-14-23.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-10-14-14.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-10-13-53.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-10-13-55.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-10-13-51.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-10-13-48.log",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgres-insert-all.py",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-16-24.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-16-28.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/report_data_source/formsite/late_notices.json",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgresDBtst.sublime-project",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-13-07.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-13-06.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-13-02.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-13-05.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-13-00.log",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/logs/postgres-insert__2022-03-09-13-01.log",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/DropboxPyProj/daysvacantnewreport.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/sql_scripts/resident__create-table.sql",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgres-insert-resident.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgres-insert-daysvacant.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/hivewire_sites.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/connAcapAzure.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/config.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/test.txt",
+		"/C/Users/JoshuaMayberry/AppData/Roaming/Sublime Text 3/Packages/User/Python 310.sublime-build",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgres-insert-property.py",
+		"/C/Users/JoshuaMayberry/AppData/Local/Temp/tmpD6F8.tmp.py",
+		"/C/Users/JoshuaMayberry/AppData/Local/Temp/tmpCDFE.tmp.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/test.py",
+		"/C/Users/JoshuaMayberry/AppData/Local/Temp/tmp3AA7.tmp.py",
+		"/C/Users/JoshuaMayberry/AppData/Local/Temp/tmp224B.tmp.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/DropboxPyProj/SFileUploader.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/DropboxPyProj/ResidentPortal.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgres-insert-occupancy.py",
+		"/C/Program Files/Python310/lib/json/decoder.py",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/systems_data/report_data_source/vineyards_live/turnoverAppendCurrent.json",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/azurestorage/common.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/azurestorage/helper_functions.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/azurestorage/load_csv.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/azurestorage/load_rps.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/azurestorage/load_rps.bat",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/storage_util.py",
+		"/C/Users/JoshuaMayberry/Documents/The Vine/Queries/ACAP.pq",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/helper_functions.py",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/azurestorage/storage_util.py",
+		"/C/Users/JoshuaMayberry/Documents/sandbox.py",
+		"/C/Users/JoshuaMayberry/AppData/Local/Temp/16458082537750/acaplist.txt",
+		"/C/Users/JoshuaMayberry/Documents/Jeremy/posgresDBtst/postgres-insert-move-ins.py",
+		"/C/Users/JoshuaMayberry/Documents/The Vine/Old Queries/ACAP.pq",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/Reports/API Uploads/commonFunctions.py",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/Reports/API Uploads/Home Inspections Test.py",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/Reports/API Uploads/Home Inspections Test.json",
+		"/C/Users/JoshuaMayberry/Documents/Formsite/Home Inspection/html_homeInspection.pq",
+		"/C/Users/JoshuaMayberry/Documents/Formsite/home-inspections__pdf-template.html",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/examples/build_htmlTable.pq",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/examples/build_htmlPage.pq",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/examples/html_homeInspection.pq",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/examples/applyTemplate_homeInspection.pq",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/examples/applyTemplate_communityInspection.pq",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/parse_formsite.pq",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/examples/query_zues.pq",
+		"/C/Users/JoshuaMayberry/Documents/Excel_Programs/examples/query_dropbox.pq",
+		"/C/Users/JoshuaMayberry/Documents/Formsite/home-inspections__pdf-template_juice.html",
+		"/C/Users/JoshuaMayberry/Documents/Formsite/home-inspections__pdf-original.html",
+		"/C/Users/JoshuaMayberry/Documents/Formsite/commonFunctions.py",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/Reports/API Uploads/Community Inspections test.json",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/Reports/API Uploads/Community Inspections Test.py",
+		"/C/Users/JoshuaMayberry/Stonebrink Leads Dropbox/Joshua Mayberry/Reports/API Uploads/Community Inspections.json",
+		"/C/Users/JoshuaMayberry/AppData/Local/Microsoft/Office/16.0/PowerQuery/Traces/EXCEL.23776.2022-02-04T16-12-57-625219.log",
+		"/C/Users/JoshuaMayberry/.ssh/id_rsa_ford",
+		"/C/Users/JoshuaMayberry/.ssh/kia_key.pem"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"NCS",
+			"':",
+			", ",
+			"':",
+			"',",
+			"turnover",
+			"config",
+			"psycopg2",
+			"class=\"vine-cell\"",
+			"config",
+			"collections",
+			"method=\"drop\"",
+			"@",
+			"do_drop",
+			"sending ",
+			"pipe_combined",
+			"strp",
+			"\"",
+			"date_start",
+			"formsite_",
+			"server",
+			"timeit",
+			"\"",
+			"inner",
+			"start",
+			"_timeit",
+			"logger_timeit_start",
+			"choices=[0, 1], ",
+			"type=int, default=0, ",
+			"chunk_size",
+			"\"",
+			"do_upsert",
+			"\"",
+			"enumerate",
+			"dir_python",
+			"table=",
+			"doResident",
+			"<<<",
+			"'",
+			"data_isPandas",
+			"_yield_fileOutput",
+			"popd",
+			"pushd",
+			"echo",
+			"set ",
+			"set",
+			"SET",
+			"37",
+			"property",
+			"default=0",
+			"site",
+			"'",
+			"_char",
+			"modifyData_isReady",
+			"ma_loadData",
+			"1",
+			"\n\t\t\t"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content"
+							],
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 364.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/Python 310.sublime-build",
+	"project": "Website.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 333.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

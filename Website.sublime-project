@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "Root",
+			"folder_exclude_patterns": [".vscode", "__pycache__"],
+			"follow_symlinks": true
+		}
+	]
+}
